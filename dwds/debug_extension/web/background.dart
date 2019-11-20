@@ -116,6 +116,8 @@ Future<void> startSseClient(
   sendCommand(Debuggee(tabId: currentTab.id), 'Runtime.enable', EmptyParam(),
       allowInterop((e) {}));
 
+  var events = <ExtensionEvent>[];
+  Timer timer;
   // Notifies the backend of debugger events.
   //
   // The listener of the `currentTab` receives events from all tabs.
@@ -124,9 +126,19 @@ Future<void> startSseClient(
   addDebuggerListener(
       allowInterop((Debuggee source, String method, Object params) {
     if (source.tabId == currentTab.id && attached) {
-      client.sink.add(jsonEncode(serializers.serialize(ExtensionEvent((b) => b
+      events.add(ExtensionEvent((b) => b
         ..params = jsonEncode(json.decode(stringify(params)))
-        ..method = jsonEncode(method)))));
+        ..method = jsonEncode(method)));
+      if (timer == null) {
+        timer = Timer(const Duration(milliseconds: 250), () {
+          client.sink.add(jsonEncode(serializers.serialize(ExtensionEvents(
+              (b) => b
+                ..events =
+                    BuiltList<ExtensionEvent>.from(events).toBuilder()))));
+          events.clear();
+          timer = null;
+        });
+      }
     }
   }));
 

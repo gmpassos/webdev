@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
@@ -66,4 +67,18 @@ abstract class ExtensionEvent
   String get params;
 
   String get method;
+}
+
+/// A a set of events for Dart Debug Extension.
+abstract class ExtensionEvents
+    implements Built<ExtensionEvents, ExtensionEventsBuilder> {
+  static Serializer<ExtensionEvents> get serializer =>
+      _$extensionEventsSerializer;
+
+  factory ExtensionEvents([Function(ExtensionEventsBuilder) updates]) =
+      _$ExtensionEvents;
+
+  ExtensionEvents._();
+
+  BuiltList<ExtensionEvent> get events;
 }

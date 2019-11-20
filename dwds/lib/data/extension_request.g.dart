@@ -12,6 +12,8 @@ Serializer<ExtensionResponse> _$extensionResponseSerializer =
     new _$ExtensionResponseSerializer();
 Serializer<ExtensionEvent> _$extensionEventSerializer =
     new _$ExtensionEventSerializer();
+Serializer<ExtensionEvents> _$extensionEventsSerializer =
+    new _$ExtensionEventsSerializer();
 
 class _$ExtensionRequestSerializer
     implements StructuredSerializer<ExtensionRequest> {
@@ -175,6 +177,51 @@ class _$ExtensionEventSerializer
         case 'method':
           result.method = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
+          break;
+      }
+    }
+
+    return result.build();
+  }
+}
+
+class _$ExtensionEventsSerializer
+    implements StructuredSerializer<ExtensionEvents> {
+  @override
+  final Iterable<Type> types = const [ExtensionEvents, _$ExtensionEvents];
+  @override
+  final String wireName = 'ExtensionEvents';
+
+  @override
+  Iterable<Object> serialize(Serializers serializers, ExtensionEvents object,
+      {FullType specifiedType = FullType.unspecified}) {
+    final result = <Object>[
+      'events',
+      serializers.serialize(object.events,
+          specifiedType: const FullType(
+              BuiltList, const [const FullType(ExtensionEvent)])),
+    ];
+
+    return result;
+  }
+
+  @override
+  ExtensionEvents deserialize(
+      Serializers serializers, Iterable<Object> serialized,
+      {FullType specifiedType = FullType.unspecified}) {
+    final result = new ExtensionEventsBuilder();
+
+    final iterator = serialized.iterator;
+    while (iterator.moveNext()) {
+      final key = iterator.current as String;
+      iterator.moveNext();
+      final dynamic value = iterator.current;
+      switch (key) {
+        case 'events':
+          result.events.replace(serializers.deserialize(value,
+                  specifiedType: const FullType(
+                      BuiltList, const [const FullType(ExtensionEvent)]))
+              as BuiltList<dynamic>);
           break;
       }
     }
@@ -497,6 +544,99 @@ class ExtensionEventBuilder
   _$ExtensionEvent build() {
     final _$result =
         _$v ?? new _$ExtensionEvent._(params: params, method: method);
+    replace(_$result);
+    return _$result;
+  }
+}
+
+class _$ExtensionEvents extends ExtensionEvents {
+  @override
+  final BuiltList<ExtensionEvent> events;
+
+  factory _$ExtensionEvents([void Function(ExtensionEventsBuilder) updates]) =>
+      (new ExtensionEventsBuilder()..update(updates)).build();
+
+  _$ExtensionEvents._({this.events}) : super._() {
+    if (events == null) {
+      throw new BuiltValueNullFieldError('ExtensionEvents', 'events');
+    }
+  }
+
+  @override
+  ExtensionEvents rebuild(void Function(ExtensionEventsBuilder) updates) =>
+      (toBuilder()..update(updates)).build();
+
+  @override
+  ExtensionEventsBuilder toBuilder() =>
+      new ExtensionEventsBuilder()..replace(this);
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(other, this)) return true;
+    return other is ExtensionEvents && events == other.events;
+  }
+
+  @override
+  int get hashCode {
+    return $jf($jc(0, events.hashCode));
+  }
+
+  @override
+  String toString() {
+    return (newBuiltValueToStringHelper('ExtensionEvents')
+          ..add('events', events))
+        .toString();
+  }
+}
+
+class ExtensionEventsBuilder
+    implements Builder<ExtensionEvents, ExtensionEventsBuilder> {
+  _$ExtensionEvents _$v;
+
+  ListBuilder<ExtensionEvent> _events;
+  ListBuilder<ExtensionEvent> get events =>
+      _$this._events ??= new ListBuilder<ExtensionEvent>();
+  set events(ListBuilder<ExtensionEvent> events) => _$this._events = events;
+
+  ExtensionEventsBuilder();
+
+  ExtensionEventsBuilder get _$this {
+    if (_$v != null) {
+      _events = _$v.events?.toBuilder();
+      _$v = null;
+    }
+    return this;
+  }
+
+  @override
+  void replace(ExtensionEvents other) {
+    if (other == null) {
+      throw new ArgumentError.notNull('other');
+    }
+    _$v = other as _$ExtensionEvents;
+  }
+
+  @override
+  void update(void Function(ExtensionEventsBuilder) updates) {
+    if (updates != null) updates(this);
+  }
+
+  @override
+  _$ExtensionEvents build() {
+    _$ExtensionEvents _$result;
+    try {
+      _$result = _$v ?? new _$ExtensionEvents._(events: events.build());
+    } catch (_) {
+      String _$failedField;
+      try {
+        _$failedField = 'events';
+        events.build();
+      } catch (e) {
+        throw new BuiltValueNestedFieldError(
+            'ExtensionEvents', _$failedField, e.toString());
+      }
+      rethrow;
+    }
     replace(_$result);
     return _$result;
   }
