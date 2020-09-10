@@ -4,6 +4,10 @@
   client mode', which prevents additional direct connections to DWDS when
   DDS is connected.
 
+## 6.0.1
+
+- Rollback pre-release dependency of `build_web_compilers`: from `2.12.0-dev.1` to `2.11.0`.
+
 ## 6.0.0
 
 - Depend on the latest `package:devtools` and `package:devtools_server`.
